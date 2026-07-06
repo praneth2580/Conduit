@@ -10,6 +10,8 @@ members = [
   "conduit-security",
   "conduit-voice",
   "conduit-sdk",
+  "applications/ride-intercom",
+  "conduit-cli",
 ]
 
 [workspace.package]

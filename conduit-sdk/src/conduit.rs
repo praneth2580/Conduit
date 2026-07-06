@@ -192,6 +192,11 @@ impl Conduit {
     self.dispatch_outbound(packet)
   }
 
+  /// Send a text message to all nearby nodes.
+  pub fn send_broadcast(&mut self, content: impl Into<String>) -> Result<()> {
+    self.send_message(BROADCAST_NODE_ID, content)
+  }
+
   /// Send a text message to a specific peer.
   pub fn send_message(&mut self, to: NodeId, content: impl Into<String>) -> Result<()> {
     self.ensure_joined()?;

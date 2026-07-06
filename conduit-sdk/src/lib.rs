@@ -13,4 +13,5 @@ pub use conduit_discovery::{DiscoveredPeer, DriverKind, PeerEndpoint};
 pub use conduit_packets::{
   EmergencyKind, EmergencyPayload, LocationPayload, MessagingPayload,
 };
+pub use conduit_mesh::BROADCAST_NODE_ID;
 pub use conduit_voice::VoiceEngine;

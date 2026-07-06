@@ -1,0 +1,13 @@
+[package]
+name = "ride-intercom"
+description = "Motorcycle group intercom application built on Conduit"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+conduit-sdk = { path = "../../conduit-sdk" }
+
+[dev-dependencies]
+conduit-sdk = { path = "../../conduit-sdk" }
