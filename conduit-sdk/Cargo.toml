@@ -1,0 +1,17 @@
+[package]
+name = "conduit-sdk"
+description = "Application-facing SDK for the Conduit mesh platform"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+conduit-core = { path = "../conduit-core" }
+conduit-packets = { path = "../conduit-packets" }
+conduit-transport = { path = "../conduit-transport" }
+conduit-discovery = { path = "../conduit-discovery" }
+conduit-mesh = { path = "../conduit-mesh" }
+conduit-routing = { path = "../conduit-routing" }
+conduit-security = { path = "../conduit-security" }
+conduit-voice = { path = "../conduit-voice" }

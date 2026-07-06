@@ -1,0 +1,19 @@
+[workspace]
+resolver = "2"
+members = [
+  "conduit-core",
+  "conduit-packets",
+  "conduit-transport",
+  "conduit-discovery",
+  "conduit-mesh",
+  "conduit-routing",
+  "conduit-security",
+  "conduit-voice",
+  "conduit-sdk",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/conduit/conduit"

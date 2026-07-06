@@ -1,0 +1,17 @@
+[package]
+name = "conduit-discovery"
+description = "Peer discovery for the Conduit communication platform"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+conduit-core = { path = "../conduit-core" }
+conduit-packets = { path = "../conduit-packets" }
+socket2 = { version = "0.5", features = ["all"] }
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3"

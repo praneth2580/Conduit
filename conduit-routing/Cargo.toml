@@ -1,0 +1,16 @@
+[package]
+name = "conduit-routing"
+description = "Packet routing engine for the Conduit communication platform"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+conduit-core = { path = "../conduit-core" }
+conduit-mesh = { path = "../conduit-mesh" }
+conduit-packets = { path = "../conduit-packets" }
+serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+conduit-discovery = { path = "../conduit-discovery" }

@@ -1,0 +1,18 @@
+[package]
+name = "conduit-voice"
+description = "Voice engine for the Conduit communication platform"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = []
+opus = ["dep:audiopus"]
+
+[dependencies]
+conduit-core = { path = "../conduit-core" }
+conduit-mesh = { path = "../conduit-mesh" }
+conduit-packets = { path = "../conduit-packets" }
+audiopus = { version = "0.2", optional = true }
+serde = { version = "1", features = ["derive"] }
