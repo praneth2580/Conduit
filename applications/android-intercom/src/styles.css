@@ -1,0 +1,214 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f1419;
+  --panel: #1a2332;
+  --border: #2d3a4f;
+  --text: #e8eef7;
+  --muted: #8fa3bf;
+  --accent: #3d8bfd;
+  --ok: #3dd68c;
+  --warn: #f5a524;
+  --danger: #f2555a;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+header p {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+nav {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  background: #121a24;
+}
+
+nav button {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.5rem;
+  white-space: nowrap;
+}
+
+nav button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+main {
+  flex: 1;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.stat {
+  background: #121a24;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.stat .label {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.stat .value {
+  font-size: 1.1rem;
+  margin-top: 0.25rem;
+}
+
+button.primary {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.65rem 1rem;
+}
+
+button.danger {
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.65rem 1rem;
+}
+
+button.ptt {
+  width: 100%;
+  padding: 1.25rem;
+  font-size: 1rem;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  background: #121a24;
+  color: var(--text);
+}
+
+button.ptt.active {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.45rem 0.35rem;
+  text-align: left;
+}
+
+th {
+  color: var(--muted);
+}
+
+.mesh-tree {
+  font-family: ui-monospace, monospace;
+  white-space: pre;
+  background: #121a24;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  line-height: 1.5;
+}
+
+.log-list {
+  max-height: 320px;
+  overflow: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+}
+
+.log-entry {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #223044;
+}
+
+.log-entry.warn {
+  color: var(--warn);
+}
+
+.log-entry.error {
+  color: var(--danger);
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+input,
+select {
+  background: #121a24;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.65rem;
+}
+
+footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.hidden {
+  display: none;
+}

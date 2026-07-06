@@ -1,4 +1,5 @@
 use crate::config::SdkConfig;
+use crate::diagnostics::{NeighborInfo, NodeDiagnostics};
 use crate::events::SdkEvent;
 use crate::network::{NetworkBackend, NullNetwork, SimBusHandle, SimNetwork};
 use conduit_core::error::{ConduitError, Result};
@@ -16,6 +17,14 @@ use conduit_routing::{RoutingAction, RoutingDropReason, RoutingEngine};
 use conduit_security::{Identity, SecurityEngine};
 use conduit_transport::TransportEngine;
 use conduit_voice::{LinearCodec, VoiceEngine};
+
+/// Voice capture modes for reference/testing applications.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum VoiceMode {
+  PushToTalk,
+  Continuous,
+  VoiceActivity,
+}
 
 /// Lifecycle state of a [`Conduit`] instance.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -123,6 +132,44 @@ impl Conduit {
 
   pub fn set_push_to_talk(&mut self, active: bool) {
     self.voice.set_push_to_talk(active);
+  }
+
+  /// Configure voice capture mode for testing UIs.
+  pub fn set_voice_mode(&mut self, mode: VoiceMode) {
+    match mode {
+      VoiceMode::PushToTalk => {
+        self.voice.set_push_to_talk(true);
+        self.config.voice.push_to_talk = true;
+      }
+      VoiceMode::Continuous => {
+        self.voice.set_push_to_talk(false);
+        self.config.voice.push_to_talk = false;
+        self.config.voice.vad_energy_threshold = 0.0;
+      }
+      VoiceMode::VoiceActivity => {
+        self.voice.set_push_to_talk(false);
+        self.config.voice.push_to_talk = false;
+        self.config.voice.vad_energy_threshold = 0.01;
+      }
+    }
+  }
+
+  /// Read-only mesh and routing snapshot for diagnostic screens.
+  pub fn diagnostics(&self) -> NodeDiagnostics {
+    let neighbors: Vec<NeighborInfo> = self.mesh.neighbors().map(NeighborInfo::from).collect();
+    NodeDiagnostics {
+      node_id: self.node_id().to_string(),
+      node_name: self.config.node_name.clone(),
+      joined: self.is_joined(),
+      neighbor_count: neighbors.len(),
+      neighbors,
+      route_count: self.routing.routes().len(),
+      discovery_peer_count: self.discovery.peer_count(),
+    }
+  }
+
+  pub fn neighbors(&self) -> Vec<NeighborInfo> {
+    self.mesh.neighbors().map(NeighborInfo::from).collect()
   }
 
   /// Join the mesh network — starts discovery and mesh maintenance.

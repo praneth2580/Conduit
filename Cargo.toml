@@ -12,6 +12,7 @@ members = [
   "conduit-sdk",
   "applications/ride-intercom",
   "conduit-cli",
+  "conduit-ffi",
 ]
 
 [workspace.package]

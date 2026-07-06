@@ -1,10 +1,12 @@
 mod config;
 mod conduit;
+mod diagnostics;
 mod events;
 mod network;
 
 pub use config::{SdkConfig, SdkConfigBuilder};
-pub use conduit::{Conduit, ConduitState};
+pub use conduit::{Conduit, ConduitState, VoiceMode};
+pub use diagnostics::{NeighborInfo, NodeDiagnostics};
 pub use events::SdkEvent;
 pub use network::{InboundFrame, NetworkBackend, NullNetwork, SimBus, SimBusHandle, SimNetwork};
 

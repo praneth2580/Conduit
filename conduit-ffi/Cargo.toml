@@ -1,0 +1,20 @@
+[package]
+name = "conduit-ffi"
+description = "C FFI bindings for Conduit on Android and native hosts"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "conduit_ffi"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+conduit-sdk = { path = "../conduit-sdk" }
+conduit-core = { path = "../conduit-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+conduit-sdk = { path = "../conduit-sdk" }
