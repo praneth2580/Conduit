@@ -31,6 +31,7 @@ export class IntercomApp {
     codec: "linear",
     packetRate: 0,
     lastTickMs: 0,
+    statusMessage: "",
   };
 
   constructor(root: HTMLElement) {
@@ -122,18 +123,23 @@ export class IntercomApp {
         <h2>Overview</h2>
         <div class="grid">
           ${stat("Node", this.state.diagnostics?.node_name ?? "—")}
+          ${stat("Discovery", this.state.diagnostics?.discovery_driver ?? "—")}
           ${stat("Neighbors", String(this.state.stats?.connected_nodes ?? 0))}
-          ${stat("Routes", String(this.state.stats?.routes ?? 0))}
-          ${stat("RTT", `${this.state.stats?.current_rtt_ms ?? 0} ms`)}
+          ${stat("Discovered", String(this.state.diagnostics?.discovery_peer_count ?? 0))}
         </div>
       </section>
     `;
   }
 
   private discoveryHtml(): string {
+    const driver = this.state.diagnostics?.discovery_driver ?? "—";
+    const peerCount = this.state.diagnostics?.discovery_peer_count ?? 0;
     const neighbors = this.state.diagnostics?.neighbors ?? [];
     if (neighbors.length === 0) {
-      return `<section class="panel"><h2>Nearby Devices</h2><p>No peers discovered yet.</p></section>`;
+      return `<section class="panel"><h2>Nearby Devices</h2>
+        <p>Driver: <strong>${driver}</strong> · discovery peers: <strong>${peerCount}</strong></p>
+        <p>No mesh neighbors yet. Both devices must be on the same Wi‑Fi, joined, and using UDP discovery (<code>udp_broadcast</code>).</p>
+      </section>`;
     }
     const rows = neighbors
       .map(
@@ -203,6 +209,8 @@ export class IntercomApp {
       <section class="panel">
         <h2>Network Statistics</h2>
         <div class="grid">
+          ${stat("Discovery driver", this.state.diagnostics?.discovery_driver ?? "—")}
+          ${stat("Discovery peers", String(this.state.diagnostics?.discovery_peer_count ?? 0))}
           ${stat("Connected nodes", String(s?.connected_nodes ?? 0))}
           ${stat("Routes", String(s?.routes ?? 0))}
           ${stat("Packets sent", String(s?.packets_sent ?? 0))}
@@ -349,6 +357,7 @@ export class IntercomApp {
           this.updateFooter();
         }
       } catch (err) {
+        this.state.statusMessage = err instanceof Error ? err.message : String(err);
         console.error(err);
       }
     }, 1000);
@@ -365,7 +374,9 @@ export class IntercomApp {
     const footer = this.root.querySelector("#footer")!;
     const joined = this.state.joined ? "joined" : "offline";
     const neighbors = this.state.stats?.connected_nodes ?? 0;
-    footer.textContent = `${joined} · ${neighbors} neighbors · tick ${this.state.lastTickMs}ms`;
+    const driver = this.state.diagnostics?.discovery_driver ?? "—";
+    const status = this.state.statusMessage ? ` · ${this.state.statusMessage}` : "";
+    footer.textContent = `${joined} · ${driver} · ${neighbors} neighbors · tick ${this.state.lastTickMs}ms${status}`;
   }
 }
 

@@ -13,7 +13,7 @@ pub struct WifiDirectDriver {
 impl WifiDirectDriver {
   pub fn new() -> Self {
     Self {
-      available: cfg!(any(target_os = "android", target_os = "linux")),
+      available: false,
       state: DiscoveryState::Stopped,
     }
   }

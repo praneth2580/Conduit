@@ -16,6 +16,7 @@ export interface NodeDiagnostics {
   neighbors: NeighborInfo[];
   route_count: number;
   discovery_peer_count: number;
+  discovery_driver: string;
 }
 
 export interface NetworkStats {
@@ -82,4 +83,5 @@ export interface AppState {
   codec: string;
   packetRate: number;
   lastTickMs: number;
+  statusMessage: string;
 }

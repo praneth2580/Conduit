@@ -16,7 +16,9 @@ pub struct WifiAwareDriver {
 impl WifiAwareDriver {
   pub fn new() -> Self {
     Self {
-      available: cfg!(target_os = "android"),
+      // Real Wi-Fi Aware is not wired up yet; stay unavailable so the chain
+      // falls through to UDP broadcast on Android and other platforms.
+      available: false,
       state: DiscoveryState::Stopped,
     }
   }

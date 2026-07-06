@@ -13,7 +13,7 @@ pub struct HotspotDriver {
 impl HotspotDriver {
   pub fn new() -> Self {
     Self {
-      available: true,
+      available: false,
       state: DiscoveryState::Stopped,
     }
   }

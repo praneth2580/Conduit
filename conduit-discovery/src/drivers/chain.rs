@@ -92,8 +92,11 @@ mod tests {
   use crate::drivers::{HotspotDriver, UdpBroadcastDriver, WifiAwareDriver};
 
   #[test]
-  fn falls_back_when_wifi_aware_unavailable() {
-    let port = 0; // unused — chain won't reach UDP if hotspot works
+  fn falls_back_to_udp_when_platform_stubs_unavailable() {
+    let port = {
+      let socket = std::net::UdpSocket::bind("0.0.0.0:0").unwrap();
+      socket.local_addr().unwrap().port()
+    };
     let chain = DriverChain::new(vec![
       Box::new(WifiAwareDriver::new()),
       Box::new(HotspotDriver::new()),
@@ -108,7 +111,7 @@ mod tests {
     };
 
     chain.start(&ann).unwrap();
-    assert_eq!(chain.active_kind(), Some(DriverKind::Hotspot));
+    assert_eq!(chain.active_kind(), Some(DriverKind::UdpBroadcast));
   }
 
   #[test]

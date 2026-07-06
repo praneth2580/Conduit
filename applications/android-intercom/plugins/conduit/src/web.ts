@@ -70,6 +70,7 @@ export class ConduitWeb extends WebPlugin implements ConduitPlugin {
       neighbors: this.mockNeighbors,
       route_count: this.joined ? 1 : 0,
       discovery_peer_count: this.mockNeighbors.length,
+      discovery_driver: "mock",
     };
     const events: string[] = [];
     if (this.tickCount % 5 === 0 && this.joined) {

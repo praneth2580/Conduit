@@ -19,6 +19,7 @@ class ConduitPlugin : Plugin() {
   private var audioThread: Thread? = null
   @Volatile private var capturing = false
   @Volatile private var pttActive = false
+  private var multicastLock: android.net.wifi.WifiManager.MulticastLock? = null
 
   @PluginMethod
   fun initialize(call: PluginCall) {
@@ -29,6 +30,7 @@ class ConduitPlugin : Plugin() {
 
   @PluginMethod
   fun joinNetwork(call: PluginCall) {
+    acquireMulticastLock()
     val code = ConduitNative.nativeJoin()
     if (code == 0) call.resolve() else call.reject("join failed: $code")
   }
@@ -37,6 +39,7 @@ class ConduitPlugin : Plugin() {
   fun leaveNetwork(call: PluginCall) {
     stopAudioCaptureInternal()
     val code = ConduitNative.nativeLeave()
+    releaseMulticastLock()
     if (code == 0) call.resolve() else call.reject("leave failed: $code")
   }
 
@@ -180,6 +183,23 @@ class ConduitPlugin : Plugin() {
     capturing = false
     audioThread?.join(500)
     audioThread = null
+  }
+
+  private fun acquireMulticastLock() {
+    if (multicastLock?.isHeld == true) return
+    val wifi = context.applicationContext.getSystemService(android.content.Context.WIFI_SERVICE)
+      as android.net.wifi.WifiManager
+    multicastLock = wifi.createMulticastLock("conduit-discovery").apply {
+      setReferenceCounted(true)
+      acquire()
+    }
+  }
+
+  private fun releaseMulticastLock() {
+    multicastLock?.let { lock ->
+      if (lock.isHeld) lock.release()
+    }
+    multicastLock = null
   }
 
   private fun jsonToJSObject(json: String): JSObject {

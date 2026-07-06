@@ -5,9 +5,7 @@ use crate::network::{NetworkBackend, SimBusHandle, SimNetwork, UdpNetwork};
 use conduit_core::error::{ConduitError, Result};
 use conduit_core::logging::init_logging;
 use conduit_core::{NodeId, Packet, PacketPriority, PacketSequence, PacketType};
-use conduit_discovery::{
-  DiscoveryAnnouncement, DiscoveryEngine, DiscoveryEvent, DiscoveredPeer, MockDriver,
-};
+use conduit_discovery::{DiscoveryAnnouncement, DiscoveryEngine, DiscoveryEvent, DiscoveredPeer, DriverKind, MockDriver};
 use conduit_mesh::{MeshEngine, MeshEvent, MeshTick, NeighborRemovalReason, BROADCAST_NODE_ID};
 use conduit_packets::{
   EmergencyPayload, LocationPayload, MessagingPayload, PacketBody, PacketBuilder, PacketCodec,
@@ -166,6 +164,7 @@ impl Conduit {
       neighbors,
       route_count: self.routing.routes().len(),
       discovery_peer_count: self.discovery.peer_count(),
+      discovery_driver: driver_kind_label(self.discovery.active_driver()),
     }
   }
 
@@ -471,6 +470,17 @@ impl Conduit {
     }
     Ok(())
   }
+}
+
+fn driver_kind_label(kind: DriverKind) -> String {
+  match kind {
+    DriverKind::WifiAware => "wifi_aware",
+    DriverKind::WifiDirect => "wifi_direct",
+    DriverKind::Hotspot => "hotspot",
+    DriverKind::UdpBroadcast => "udp_broadcast",
+    DriverKind::Mock => "mock",
+  }
+  .into()
 }
 
 fn drop_reason_message(reason: RoutingDropReason) -> String {

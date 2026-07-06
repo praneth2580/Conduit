@@ -42,4 +42,6 @@ pub struct NodeDiagnostics {
   pub neighbors: Vec<NeighborInfo>,
   pub route_count: usize,
   pub discovery_peer_count: usize,
+  /// Active discovery backend (e.g. `udp_broadcast`, `wifi_aware`).
+  pub discovery_driver: String,
 }
