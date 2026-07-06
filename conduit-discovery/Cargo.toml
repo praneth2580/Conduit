@@ -10,6 +10,7 @@ repository.workspace = true
 conduit-core = { path = "../conduit-core" }
 conduit-packets = { path = "../conduit-packets" }
 socket2 = { version = "0.5", features = ["all"] }
+if-addrs = "0.13"
 serde = { version = "1", features = ["derive"] }
 thiserror = "2"
 

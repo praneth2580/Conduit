@@ -12,7 +12,9 @@ pub fn print_sdk_event(event: &SdkEvent) {
     SdkEvent::NeighborAdded(n) => {
       println!("neighbor added: {} ({})", n.node_name, n.node_id);
     }
-    SdkEvent::NeighborRemoved { node_id } => println!("neighbor removed: {node_id}"),
+    SdkEvent::NeighborRemoved { node_id } => {
+      println!("neighbor removed: {node_id}");
+    }
     SdkEvent::LocationReceived { from, location } => {
       println!(
         "location from {from}: lat={} lon={} alt={}m accuracy={}m",

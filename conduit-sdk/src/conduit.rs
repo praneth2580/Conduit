@@ -3,6 +3,7 @@ use crate::diagnostics::{NeighborInfo, NodeDiagnostics};
 use crate::events::SdkEvent;
 use crate::network::{NetworkBackend, SimBusHandle, SimNetwork, UdpNetwork};
 use conduit_core::error::{ConduitError, Result};
+use conduit_core::utils::unix_timestamp_ms;
 use conduit_core::logging::init_logging;
 use conduit_core::{NodeId, Packet, PacketPriority, PacketSequence, PacketType};
 use conduit_discovery::{DiscoveryAnnouncement, DiscoveryEngine, DiscoveryEvent, DiscoveredPeer, DriverKind, MockDriver};
@@ -265,6 +266,11 @@ impl Conduit {
 
     for event in self.discovery.tick()? {
       self.handle_discovery_event(event);
+    }
+
+    let now = unix_timestamp_ms();
+    for peer in self.discovery.peers() {
+      self.mesh.note_discovery_contact(&peer.node_id, now);
     }
 
     let mesh_tick = self.mesh.tick()?;

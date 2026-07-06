@@ -59,6 +59,13 @@ impl MeshEngine {
     self.neighbors.contains(node_id)
   }
 
+  /// Keep mesh neighbors alive while discovery still receives beacons.
+  pub fn note_discovery_contact(&mut self, node_id: &NodeId, now_ms: u64) {
+    if let Some(neighbor) = self.neighbors.get_mut(node_id) {
+      neighbor.touch(now_ms);
+    }
+  }
+
   pub fn start(&mut self) -> MeshTick {
     let now = unix_timestamp_ms();
     self.running = true;

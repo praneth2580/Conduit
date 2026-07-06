@@ -6,7 +6,7 @@ use crate::driver::{
 use crate::peer::DiscoveredPeer;
 use conduit_core::error::{ConduitError, Result};
 use std::collections::VecDeque;
-use std::net::{Ipv4Addr, SocketAddr, UdpSocket};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket};
 
 /// LAN discovery via UDP broadcast beacons.
 #[derive(Debug)]
@@ -40,6 +40,24 @@ impl UdpBroadcastDriver {
     socket.set_broadcast(true)?;
     socket.set_nonblocking(true)?;
     Ok(socket.into())
+  }
+
+  fn broadcast_targets(port: u16) -> Vec<SocketAddr> {
+    let mut targets = vec![SocketAddr::from((Ipv4Addr::BROADCAST, port))];
+    if let Ok(interfaces) = if_addrs::get_if_addrs() {
+      for iface in interfaces {
+        if !iface.is_loopback() {
+          if let if_addrs::IfAddr::V4(v4) = iface.addr {
+            if let Some(broadcast) = v4.broadcast {
+              targets.push(SocketAddr::new(IpAddr::V4(broadcast), port));
+            }
+          }
+        }
+      }
+    }
+    targets.sort();
+    targets.dedup();
+    targets
   }
 
   fn drain_incoming(&mut self) -> Result<()> {
@@ -122,8 +140,20 @@ impl DiscoveryDriver for UdpBroadcastDriver {
       .as_ref()
       .ok_or_else(|| ConduitError::Configuration("udp driver is not running".into()))?;
     let payload = encode_beacon(announcement)?;
-    let broadcast_addr = SocketAddr::from((Ipv4Addr::BROADCAST, self.port));
-    socket.send_to(&payload, broadcast_addr)?;
+    let mut sent = false;
+    for addr in Self::broadcast_targets(self.port) {
+      match socket.send_to(&payload, addr) {
+        Ok(_) => sent = true,
+        Err(e) if e.kind() == std::io::ErrorKind::NetworkUnreachable => {}
+        Err(e) => return Err(ConduitError::Io(e)),
+      }
+    }
+    if !sent {
+      return Err(ConduitError::Io(std::io::Error::new(
+        std::io::ErrorKind::NetworkUnreachable,
+        "no reachable broadcast targets",
+      )));
+    }
     self.local = Some(announcement.clone());
     Ok(())
   }
