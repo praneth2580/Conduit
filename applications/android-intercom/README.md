@@ -9,7 +9,7 @@ UI (Capacitor / TypeScript)
         ↓
 Conduit Capacitor Plugin (Kotlin)
         ↓
-conduit-ffi (Rust cdylib)
+conduit-ffi (Rust cdylib + JNI)
         ↓
 conduit-sdk → Conduit Framework
 ```
@@ -19,34 +19,54 @@ The UI contains **no communication logic** — only diagnostics and controls.
 ## Prerequisites
 
 - Node.js 20+
-- Rust toolchain
-- Android Studio + Android NDK
-- `ANDROID_NDK_HOME` set
+- Rust toolchain (`rustup`)
+- Java 17+ (`java`)
+- `adb` (Android platform-tools)
+- Android SDK at `~/Android/Sdk` or set `ANDROID_SDK_ROOT`
 
-## Web development (mock backend)
+**No Android Studio required.**
+
+## One-time setup
 
 ```bash
 cd applications/android-intercom
 npm install
+npm run android:setup    # installs NDK, Rust Android targets, cargo-ndk
+```
+
+## Build & run on device (CLI only)
+
+Connect a phone with USB debugging, then:
+
+```bash
+cd applications/android-intercom
+npm run android:run    # build APK + install + launch
+```
+
+Or step by step:
+
+```bash
+npm run android:build    # web + Rust native + Gradle APK
+npm run android:install  # adb install + start app
+```
+
+APK output: `android/app/build/outputs/apk/debug/app-debug.apk`
+
+## Web development (browser mock)
+
+```bash
 npm run dev
 ```
 
 Open http://localhost:5173 — uses the web mock plugin with simulated peers.
 
-## Android build
+## Environment
 
-```bash
-# 1. Build Rust FFI for Android
-./scripts/build-android-ffi.sh
-
-# 2. Build web assets and sync Capacitor
-cd applications/android-intercom
-npm install
-npm run cap:sync
-
-# 3. Open in Android Studio
-npm run cap:android
-```
+| Variable | Default |
+|----------|---------|
+| `ANDROID_SDK_ROOT` | `~/Android/Sdk` |
+| `ANDROID_NDK_HOME` | `$ANDROID_SDK_ROOT/ndk/26.1.10909125` |
+| `CONDUIT_ANDROID_ABIS` | `arm64-v8a` (set to `all` for emulator ABIs) |
 
 ## Screens
 
@@ -59,7 +79,3 @@ npm run cap:android
 | Stats | Packets, routes, RTT, bandwidth |
 | Packets | Packet inspector for routing debug |
 | Logs | Exportable event log |
-
-## Test modes
-
-Single device, two/three device, mesh, mobility, and battery test modes are selectable on the dashboard for field testing workflows described in EXAMPLE.md.

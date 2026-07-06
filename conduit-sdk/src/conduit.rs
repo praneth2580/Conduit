@@ -1,7 +1,7 @@
 use crate::config::SdkConfig;
 use crate::diagnostics::{NeighborInfo, NodeDiagnostics};
 use crate::events::SdkEvent;
-use crate::network::{NetworkBackend, NullNetwork, SimBusHandle, SimNetwork};
+use crate::network::{NetworkBackend, SimBusHandle, SimNetwork, UdpNetwork};
 use conduit_core::error::{ConduitError, Result};
 use conduit_core::logging::init_logging;
 use conduit_core::{NodeId, Packet, PacketPriority, PacketSequence, PacketType};
@@ -86,7 +86,8 @@ impl Conduit {
       let net = SimNetwork::new(node_id, bus.clone());
       (Box::new(net), Some(bus))
     } else {
-      (Box::new(NullNetwork), None)
+      let net = UdpNetwork::new(node_id)?;
+      (Box::new(net), None)
     };
 
     Ok(Self {
@@ -356,6 +357,9 @@ impl Conduit {
   fn handle_discovery_event(&mut self, event: DiscoveryEvent) {
     match &event {
       DiscoveryEvent::PeerFound(peer) => {
+        self
+          .network
+          .register_peer(peer.node_id, &peer.endpoint);
         self.pending_events.push(SdkEvent::PeerDiscovered {
           node_id: peer.node_id,
           name: peer.node_name.clone(),

@@ -7,6 +7,9 @@ pub const BEACON_VERSION: u8 = 1;
 /// Default UDP port for LAN discovery broadcasts.
 pub const DEFAULT_DISCOVERY_PORT: u16 = 4_219;
 
+/// Default UDP port for mesh transport frames between peers.
+pub const DEFAULT_DATA_PORT: u16 = 4_220;
+
 /// Default interval between discovery broadcasts in milliseconds.
 pub const DEFAULT_ANNOUNCE_INTERVAL_MS: u64 = 3_000;
 

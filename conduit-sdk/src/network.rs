@@ -1,7 +1,12 @@
+mod udp;
+
 use conduit_core::error::Result;
 use conduit_core::NodeId;
+use conduit_discovery::PeerEndpoint;
 use std::collections::{HashMap, VecDeque};
 use std::sync::{Arc, Mutex};
+
+pub use udp::UdpNetwork;
 
 /// A single inbound transport frame from a remote peer.
 #[derive(Debug, Clone)]
@@ -14,6 +19,7 @@ pub struct InboundFrame {
 pub trait NetworkBackend: Send {
   fn send_frames(&mut self, to: NodeId, frames: &[Vec<u8>]) -> Result<()>;
   fn drain_inbound(&mut self) -> Vec<InboundFrame>;
+  fn register_peer(&mut self, _node_id: NodeId, _endpoint: &PeerEndpoint) {}
 }
 
 /// Shared in-memory bus for simulations and unit tests.

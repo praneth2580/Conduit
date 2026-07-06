@@ -10,7 +10,11 @@
     "preview": "vite preview",
     "cap:add:android": "npx cap add android",
     "cap:sync": "npm run build && node scripts/ensure-android.mjs && npx cap sync android",
-    "cap:android": "node scripts/ensure-android.mjs && npx cap open android"
+    "android:setup": "bash ../../scripts/setup-android-cli.sh",
+    "android:build": "bash scripts/build-apk.sh",
+    "android:install": "bash scripts/install-apk.sh",
+    "android:run": "npm run android:build && npm run android:install",
+    "android:native": "bash ../../scripts/build-android-ffi.sh"
   },
   "dependencies": {
     "@capacitor/android": "^7.0.0",

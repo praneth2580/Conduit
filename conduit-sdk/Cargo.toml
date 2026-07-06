@@ -16,3 +16,4 @@ conduit-routing = { path = "../conduit-routing" }
 conduit-security = { path = "../conduit-security" }
 conduit-voice = { path = "../conduit-voice" }
 serde = { version = "1", features = ["derive"] }
+socket2 = "0.5"

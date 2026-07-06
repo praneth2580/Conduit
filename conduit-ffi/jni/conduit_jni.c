@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-// C ABI from conduit-ffi
 extern char *conduit_version(void);
 extern void conduit_free_string(char *ptr);
 extern int conduit_init(const char *name);
 extern int conduit_join(void);
 extern int conduit_leave(void);
 extern char *conduit_tick(void);
-extern int conduit_set_ptt(int active);
+extern int conduit_set_ptt(unsigned char active);
 extern int conduit_set_voice_mode(const char *mode);
 extern int conduit_send_voice(const short *samples, size_t len);
 extern char *conduit_get_diagnostics(void);

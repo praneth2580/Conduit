@@ -11,7 +11,7 @@ mod drivers;
 mod engine;
 mod peer;
 
-pub use config::DiscoveryConfig;
+pub use config::{DiscoveryConfig, DEFAULT_DATA_PORT, DEFAULT_DISCOVERY_PORT};
 pub use driver::{
   DiscoveryAnnouncement, DiscoveryDriver, DiscoveryEvent, DiscoveryState, DriverKind,
   PeerEndpoint,

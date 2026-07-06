@@ -34,3 +34,24 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Android — Capacitor app (see also android/.gitignore)
+android/.gradle/
+android/**/build/
+android/local.properties
+android/.cxx/
+android/.externalNativeBuild/
+
+# Android — local Capacitor plugins (e.g. plugins/conduit/android)
+plugins/**/android/build/
+plugins/**/android/.gradle/
+plugins/**/android/.cxx/
+plugins/**/android/.externalNativeBuild/
+plugins/**/android/src/main/jniLibs/
+
+# Packaged native / Gradle artifacts
+*.apk
+*.aab
+*.aar
+*.ap_
+*.dex
